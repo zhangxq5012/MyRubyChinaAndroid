@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/topic_item">
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/avatarView"
+        android:src="@drawable/avatar_middle"
+        android:layout_width="48dip"
+        android:layout_height="48dip" />
+    <TextView
+        android:id="@+id/login"
+        android:layout_toRightOf="@id/avatarView"
+        android:gravity="center"
+        android:layout_alignBottom="@id/avatarView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="test"
+        />
+    <TextView
+        android:id="@+id/replies_count"
+        android:background="@color/blue"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/white"
+        android:padding="5dp"
+        android:textSize="20dp"
+        android:text="6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_below="@id/avatarView"
+        android:textSize="20dp"
+        android:text="testText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/node_name"
+        android:text="share"
+        android:layout_below="@id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/zhy"
+        android:layout_below="@id/title"
+        android:layout_toRightOf="@id/node_name"
+        android:text="•最后由"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/last_reply_user_login"
+        android:layout_below="@id/title"
+        android:layout_toRightOf="@id/zhy"
+        android:text="magic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/replied_at"
+        android:layout_below="@id/title"
+        android:layout_toRightOf="@id/last_reply_user_login"
+        android:text="2014-07-29T10:58:59.081+08:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+
+
+</RelativeLayout>
