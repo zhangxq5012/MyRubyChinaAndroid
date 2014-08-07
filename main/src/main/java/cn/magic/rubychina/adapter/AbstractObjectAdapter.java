@@ -76,15 +76,15 @@ public class AbstractObjectAdapter extends BaseAdapter {
         } else {
             v = convertView;
         }
-        bindView(v, mContext, abstractObjects);
+        bindView(v, mContext, abstractObjects.get(position));
         return v;
     }
 
-    private void bindView(View view, Context mContext, List<AbstractObject> abstractObjects) {
+    private void bindView(View view, Context mContext, AbstractObject abstractObject) {
 
-        for (int i = 0; i < getCount(); i++) {
+        for (int i = 0; i < to.length; i++) {
             final View v = view.findViewById(to[i]);
-            String text=(String) abstractObjects.get(i).getAttribute(from[i]);
+            String text=(String) abstractObject.getAttribute(from[i]);
             if(text==null){
                 continue;
             }

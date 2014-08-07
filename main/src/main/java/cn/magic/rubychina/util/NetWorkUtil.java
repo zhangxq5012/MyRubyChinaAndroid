@@ -13,6 +13,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Created by magic on 2014/7/26.
@@ -60,4 +61,20 @@ public class NetWorkUtil {
                 new LruBitmapCache(context.getApplicationContext()));
         return loader;
     }
+
+
+    public String appendParam(String url,Map<String,String> param){
+        StringBuffer strb=new StringBuffer();
+        if(param.size()>0){
+            strb.append("?");
+            for(String key:param.keySet()){
+                strb.append(key+"="+param.get(key));
+                strb.append("&");
+            }
+            url=url+strb.substring(0,strb.length()-1) ;
+        }
+        return url;
+    }
+
+
 }

@@ -2,55 +2,75 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     android:id="@+id/topic_item">
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/avatarView"
-        android:src="@drawable/avatar_middle"
-        android:layout_width="48dip"
-        android:layout_height="48dip" />
-    <TextView
-        android:id="@+id/login"
-        android:layout_toRightOf="@id/avatarView"
-        android:gravity="center"
-        android:layout_alignBottom="@id/avatarView"
+
+
+    <LinearLayout
+        android:id="@+id/imageLayout"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="test"
-        />
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        >
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/avatarView"
+            android:src="@drawable/default_avatar"
+            android:layout_width="48dip"
+            android:layout_height="48dip" />
+        <TextView
+            android:id="@+id/login"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test"
+            />
+        </LinearLayout>
     <TextView
         android:id="@+id/replies_count"
         android:background="@color/blue"
         android:layout_alignParentRight="true"
         android:textColor="@color/white"
-        android:padding="5dp"
+        android:padding="4dp"
         android:textSize="20dp"
         android:text="6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
     <TextView
         android:id="@+id/title"
-        android:layout_below="@id/avatarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageLayout"
+        android:layout_toLeftOf="@id/replies_count"
         android:textSize="20dp"
         android:text="testText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+
+        />
+
     <TextView
+        android:layout_toRightOf="@id/imageLayout"
         android:id="@+id/node_name"
         android:text="share"
+        android:textColor="@color/blue"
         android:layout_below="@id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
     <TextView
         android:id="@+id/zhy"
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/node_name"
-        android:text="•最后由"
+        android:text=" • "
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/last_reply_user_login"
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/zhy"
+        android:textColor="@color/blue"
         android:text="magic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

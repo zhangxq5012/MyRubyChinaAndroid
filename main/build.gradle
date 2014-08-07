@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.rubychina.main"
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 14
         versionCode 1
         versionName "1.0"
@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:19.+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':volley')
+    compile project(':library')
 }
