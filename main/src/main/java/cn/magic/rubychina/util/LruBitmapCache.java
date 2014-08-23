@@ -4,7 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.util.LruCache;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,19 +23,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import cn.magic.rubychina.app.RubyApplication;
 
 public class LruBitmapCache extends LruCache<String, Bitmap>
         implements ImageCache {
+    private static LruBitmapCache lruBitmapCache;
+
     private static final String TAG = "LruBitmapCache";
-    private static final int MAXIMAGEDISKNUM = 50;
-    private static final int MAXIMAGEMEMORYNUM = 4;
+    private static final int MAXIMAGEDISKNUM = 100;
+    private static final int MAXIMAGEMEMORYNUM = 3;
     private DiskLruCache mDiskCache;
     public static final int MAXCACHESIZE = 1024 * 1024 * 200;
 
     private final Object mDiskCacheLock = new Object();
-    private boolean mDiskCacheStarting = true;
+    private boolean mDiskCacheStarting = false;
     private static final Bitmap.CompressFormat DEFAULT_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
     private static final int DEFAULT_COMPRESS_QUALITY = 70;
 
@@ -41,17 +50,28 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
         super(maxSize);
     }
 
-    public LruBitmapCache(Context ctx) {
+    private LruBitmapCache(Context ctx) {
         this(MAXIMAGEMEMORYNUM * getCacheSize(ctx));
         initDistCache(ctx);
+
+    }
+
+    public static LruBitmapCache getInstance(Context ctx){
+        if(lruBitmapCache==null){
+            lruBitmapCache=new LruBitmapCache(ctx.getApplicationContext());
+        }
+        return lruBitmapCache;
 
     }
 
     private void initDistCache(Context ctx) {
         try {
             File cacheDir = getCacheDir(ctx, DISK_CACHE_SUBDIR);
-//            mDiskCache = DiskLruCache.open(cacheDir, RubyApplication.VERSION, 1,
-//                    getCacheSize(ctx) * MAXIMAGEDISKNUM);
+            if(!cacheDir.exists()){
+                cacheDir.mkdirs();
+            }
+            mDiskCache = DiskLruCache.open(cacheDir, RubyApplication.VERSION, 1,
+                    getCacheSize(ctx) * MAXIMAGEDISKNUM);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
@@ -65,6 +85,9 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
 
     @Override
     public Bitmap getBitmap(String url) {
+        if(url==null){
+            return null;
+        }
         Bitmap bitmap;
         bitmap = get(url);
         if (bitmap == null) {
@@ -73,8 +96,11 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
         return bitmap;
     }
 
-    public Bitmap getBitmapFromDiskCache(String key) {
+    public Bitmap getBitmapFromDiskCache(String url) {
         Bitmap bitmap = null;
+        String key=hashKeyForDisk(url);
+        Log.e("magicKey","url="+url);
+        Log.e("magicKey","key="+key);
 
         synchronized (mDiskCacheLock) {
             while (mDiskCacheStarting) {
@@ -115,11 +141,28 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
     }
 
 
-    public void putBitmap(String url, Bitmap bitmap) {
+    public void putBitmap(final String url, final Bitmap bitmap) {
         put(url, bitmap);
-        addBitmapToCache(url,bitmap);
-
+//        addBitmapToCache(url,bitmap);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                Handler handler=new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        Log.e(TAG, url);
+                        addBitmapToCache(url,bitmap);
+                    }
+                };
+                handler.sendEmptyMessage(1);
+                Looper.loop();
+            }
+        }).start();
     }
+
+
+
 
 
     /**
@@ -129,17 +172,21 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
      */
     public void addBitmapToCache(String url, Bitmap value) {
 
+
         if (url == null || value == null) {
             return;
         }
+        String key=hashKeyForDisk(url);
+        Log.e("magicKey","url="+url);
+        Log.e("magicKey","key="+key);
         synchronized (mDiskCacheLock) {
             // Add to disk cache
             if (mDiskCache != null) {
                 OutputStream out = null;
                 try {
-                    DiskLruCache.Snapshot snapshot = mDiskCache.get(url);
+                    DiskLruCache.Snapshot snapshot = mDiskCache.get(key);
                     if (snapshot == null) {
-                        final DiskLruCache.Editor editor = mDiskCache.edit(url);
+                        final DiskLruCache.Editor editor = mDiskCache.edit(key);
                         if (editor != null) {
                             out = editor.newOutputStream(0);
                             value.compress(
@@ -188,5 +235,35 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
         // otherwise use internal cache dir
         File inCahcePath = context.getCacheDir();
         return new File(inCahcePath.getPath() + File.separator + uniqueName);
+    }
+
+
+    /**
+     * A hashing method that changes a string (like a URL) into a hash suitable for using as a
+     * disk filename.
+     */
+    public static String hashKeyForDisk(String key) {
+        String cacheKey;
+        try {
+            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
+            mDigest.update(key.getBytes());
+            cacheKey = bytesToHexString(mDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            cacheKey = String.valueOf(key.hashCode());
+        }
+        return cacheKey;
+    }
+
+    private static String bytesToHexString(byte[] bytes) {
+        // http://stackoverflow.com/questions/332079
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
     }
 }

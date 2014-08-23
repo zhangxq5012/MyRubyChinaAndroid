@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -30,30 +32,29 @@ public class AbstractObjectAdapter extends BaseAdapter {
     int[] to;//view的ID
 
 
+    List<AbstractObject> abstractObjects;
+
     public void setAbstractObjects(List abstractObjects) {
         this.abstractObjects = abstractObjects;
         notifyDataSetChanged();
     }
 
-    List<AbstractObject> abstractObjects;
 
-
-
-    public AbstractObjectAdapter(Context context, int layout,List<AbstractObject> abstractObjects, String[] from, int[] to) {
+    public AbstractObjectAdapter(Context context, int layout, List abstractObjects, String[] from, int[] to) {
         super();
-        mContext=context;
+        mContext = context;
         mLayout = layout;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.from=from;
-        this.to=to;
+        this.from = from;
+        this.to = to;
         this.abstractObjects = abstractObjects;
     }
 
     @Override
     public int getCount() {
-        if(abstractObjects!=null){
+        if (abstractObjects != null) {
             return abstractObjects.size();
-        }else{
+        } else {
             return 0;
         }
     }
@@ -84,14 +85,16 @@ public class AbstractObjectAdapter extends BaseAdapter {
 
         for (int i = 0; i < to.length; i++) {
             final View v = view.findViewById(to[i]);
-            String text=(String) abstractObject.getAttribute(from[i]);
-            if(text==null){
+            String text = (String) abstractObject.getAttribute(from[i]);
+            if (text == null) {
                 continue;
             }
             if (v instanceof TextView) {
                 setViewText((TextView) v, text);
-            } else if (v instanceof NetworkImageView ) {
+            } else if (v instanceof NetworkImageView) {
                 setNetworkImageView((NetworkImageView) v, text);
+            } else if (v instanceof WebView) {
+                setWebVIew((WebView) v, text);
             } else {
                 throw new IllegalStateException(v.getClass().getName() + " is not a " +
                         " view that can be bounds by this SimpleCursorAdapter");
@@ -99,8 +102,14 @@ public class AbstractObjectAdapter extends BaseAdapter {
         }
     }
 
+    private void setWebVIew(WebView webview, String text) {
+        webview.getSettings().setDefaultTextEncodingName(NetWorkUtil.CHARSET);
+        webview.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webview.loadData(text, "text/html; charset=UTF-8", null);
+    }
+
     private void setNetworkImageView(NetworkImageView v, String text) {
-        v.setImageUrl(text,NetWorkUtil.getInstance(mContext).getImageLoader());
+        v.setImageUrl(text, NetWorkUtil.getInstance(mContext).getImageLoader());
     }
 
     private void setViewText(TextView v, String text) {
@@ -112,9 +121,9 @@ public class AbstractObjectAdapter extends BaseAdapter {
      * Inflates view(s) from the specified XML file.
      *
      * @see android.widget.CursorAdapter#newView(android.content.Context,
-     *      android.database.Cursor, ViewGroup)
+     * android.database.Cursor, ViewGroup)
      */
-    public View newView(Context context , ViewGroup parent) {
+    public View newView(Context context, ViewGroup parent) {
         return mInflater.inflate(mLayout, parent, false);
     }
 }

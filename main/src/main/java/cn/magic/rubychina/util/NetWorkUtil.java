@@ -20,6 +20,9 @@ import java.util.Map;
  * 访问网络需要用到的类
  */
 public class NetWorkUtil {
+
+    public static String CHARSET ="UTF-8";
+
     public static NetWorkUtil netWorkUtil;
     //RUBY china 的URL
     public static final String RUBYCHINAURL = "https://ruby-china.org";
@@ -27,6 +30,9 @@ public class NetWorkUtil {
     public static final String API = RUBYCHINAURL + "/" + "api";
     //文章列表的URL
     public static final String TOPICS = API + "/" + "topics.json";
+
+    public static final String TOPIC_INFO = API + "/"+"topics/%s.json";
+
     RequestQueue requestQueue;
 
     private static Context context;
@@ -58,7 +64,7 @@ public class NetWorkUtil {
 
     public ImageLoader getImageLoader() {
         ImageLoader loader = new ImageLoader(getRequestQueue(),
-                new LruBitmapCache(context.getApplicationContext()));
+                 LruBitmapCache.getInstance(context));
         return loader;
     }
 

@@ -1,5 +1,7 @@
 package cn.magic.rubychina.vo;
 
+import android.util.Log;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 

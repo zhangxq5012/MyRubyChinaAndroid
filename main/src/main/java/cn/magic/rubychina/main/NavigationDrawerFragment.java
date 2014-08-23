@@ -59,6 +59,8 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+
+
     public NavigationDrawerFragment() {
     }
 
@@ -98,13 +100,16 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
+        //导航抽屉内容数 组
+        String[] arrays= new String[]{
+                getString(R.string.title_hotdiscuss)
+                ,getString(R.string.title_nodeclassify)
+        };
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1)
-                }));
+                arrays));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }

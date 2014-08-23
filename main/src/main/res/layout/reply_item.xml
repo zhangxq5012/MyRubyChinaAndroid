@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/r_reply_user_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+        <TextView
+            android:id="@+id/r_login"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/r_reply_user_avatar"
+            android:gravity="center"
+            android:text="test"
+            />
+        <TextView
+            android:id="@+id/r_replied_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/r_reply_user_avatar"
+            android:gravity="center"
+            android:text="test" />
+        </RelativeLayout>
+    <WebView
+        android:id="@+id/r_replied_body_html"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></WebView>
+
+
+</LinearLayout>

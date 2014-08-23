@@ -1,17 +1,32 @@
 package cn.magic.rubychina.main;
 
+import android.net.Uri;
+import android.nfc.Tag;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 
+import java.util.List;
+
+import cn.magic.rubychina.ui.TopicsFragment;
+import cn.magic.rubychina.ui.topicinfo.TopicInfoFragment;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,TopicsFragment.OnTopicSelectedListener
+,TopicInfoFragment.OnFragmentInteractionListener{
+
+    String TAG="MainActivity";
+
+    Fragment[] fragments;
+
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -22,7 +37,6 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,27 +50,34 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        initFragments();
+        onNavigationDrawerItemSelected(0);
+
+    }
+
+    private void initFragments() {
+        fragments=new Fragment[2];
+        fragments[0]= TopicsFragment.newInstance();
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, TopicsFragment.newInstance(position + 1))
-                .commit();
+        if(fragments!=null){
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragments[position]).addToBackStack(null)
+                    .commit();
+        }
     }
 
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle = getString(R.string.title_hotdiscuss);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
+                mTitle = getString(R.string.title_nodeclassify);
                 break;
         }
     }
@@ -94,6 +115,17 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void onTopicSelect(String topicID){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction=fragmentManager.beginTransaction();
+        transaction.replace(R.id.container,
+                TopicInfoFragment.newInstance(topicID)).addToBackStack(null).commit();
+        Log.e(TAG,"testTopicSelected"+topicID);
+    }
 
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by magic on 2014/7/26.
@@ -116,12 +117,21 @@ public class Topic extends AbstractObject {
     }
 
 
+    public String getBody_html() {
+        return body_html;
+    }
+
+    public void setBody_html(String body_html) {
+        this.body_html = body_html;
+    }
+
+
     public static final int DAYINT = 24 * 3600;
     public static final int HOURINT = 3600;
     public static final int MINUTE = 60;
 
 
-    public String getShowTimeString(String showTime, DateFormat dateFormat) {
+    public static String getShowTimeString(String showTime, DateFormat dateFormat) {
         Date date = new Date();
         Date nowTime = new Date();
         try {
@@ -150,7 +160,9 @@ public class Topic extends AbstractObject {
         }
     }
 
-    User user;
+
+
+    public User user;
     public String avatar_url;
     public String login;
     public String id;
@@ -174,4 +186,16 @@ public class Topic extends AbstractObject {
     public static final String NODE_ID = "node_id";
     public static final String LAST_REPLY_USER_ID = "last_reply_user_id";
     public static final String LAST_REPLY_USER_LOGIN = "last_reply_user_login";
+    public String body_html;
+
+
+    public List<TopicReply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<TopicReply> replies) {
+        this.replies = replies;
+    }
+
+    public List<TopicReply> replies;
 }

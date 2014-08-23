@@ -8,9 +8,9 @@
 
     <LinearLayout
         android:id="@+id/imageLayout"
-        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingRight="8dp"
         >
         <com.android.volley.toolbox.NetworkImageView
@@ -28,14 +28,15 @@
         </LinearLayout>
     <TextView
         android:id="@+id/replies_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@color/blue"
         android:layout_alignParentRight="true"
         android:textColor="@color/white"
         android:padding="4dp"
         android:textSize="20dp"
         android:text="6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        />
 
 
     <TextView
@@ -50,37 +51,41 @@
         />
 
     <TextView
-        android:layout_toRightOf="@id/imageLayout"
         android:id="@+id/node_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageLayout"
+        android:layout_below="@id/title"
         android:text="share"
         android:textColor="@color/blue"
-        android:layout_below="@id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        />
 
 
     <TextView
         android:id="@+id/zhy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/node_name"
         android:text=" • "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        />
     <TextView
         android:id="@+id/last_reply_user_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/zhy"
         android:textColor="@color/blue"
         android:text="magic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        />
     <TextView
         android:id="@+id/replied_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/last_reply_user_login"
         android:text="2014-07-29T10:58:59.081+08:00"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+         />
 
 
 
