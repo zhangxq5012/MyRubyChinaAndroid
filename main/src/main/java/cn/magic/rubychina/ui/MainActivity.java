@@ -1,7 +1,6 @@
-package cn.magic.rubychina.main;
+package cn.magic.rubychina.ui;
 
 import android.net.Uri;
-import android.nfc.Tag;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -13,9 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 
-import java.util.List;
-
-import cn.magic.rubychina.ui.TopicsFragment;
+import cn.magic.rubychina.main.R;
+import cn.magic.rubychina.ui.itf.IBackPressed;
 import cn.magic.rubychina.ui.topicinfo.TopicInfoFragment;
 
 
@@ -26,6 +24,8 @@ public class MainActivity extends ActionBarActivity
     String TAG="MainActivity";
 
     Fragment[] fragments;
+
+    IBackPressed currentFrag;
 
 
     /**
@@ -115,14 +115,38 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void showTopicReplies(){
+
+    }
     public void onTopicSelect(String topicID){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction=fragmentManager.beginTransaction();
-        transaction.replace(R.id.container,
-                TopicInfoFragment.newInstance(topicID)).addToBackStack(null).commit();
+        replaceFragment( TopicInfoFragment.newInstance(topicID));
         Log.e(TAG,"testTopicSelected"+topicID);
     }
 
+    private void replaceFragment(TopicInfoFragment topicInfoFragment) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction=fragmentManager.beginTransaction();
+        transaction.replace(R.id.container,
+                topicInfoFragment).addToBackStack(null).commit();
+        currentFrag=topicInfoFragment;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(currentFrag!=null){
+            if(currentFrag.onBackPressed()){
+                return;
+            };
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void callReplyInfos(Bundle bundle) {
+
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

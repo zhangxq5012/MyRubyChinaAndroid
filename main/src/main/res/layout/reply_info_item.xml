@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        >
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/r_reply_user_avatar"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/r_login"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_toRightOf="@id/r_reply_user_avatar"
+            android:gravity="left"
+            android:text="test"
+            />
+        <TextView
+            android:id="@+id/r_replied_at"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_toRightOf="@id/r_login"
+            android:paddingLeft="48dp"
+            android:gravity="left"
+            android:text="test" />
+        <TextView
+            android:id="@+id/r_replied_body_html"
+            android:textSize="18dp"
+            android:layout_below="@id/r_replied_at"
+            android:layout_toRightOf="@id/r_reply_user_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></TextView>
+        </RelativeLayout>

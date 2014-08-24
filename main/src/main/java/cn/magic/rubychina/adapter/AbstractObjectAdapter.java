@@ -2,12 +2,14 @@ package cn.magic.rubychina.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,7 +25,7 @@ import cn.magic.rubychina.vo.AbstractObject;
 /**
  * Created by magic on 2014/7/28.
  */
-public class AbstractObjectAdapter extends BaseAdapter {
+public class AbstractObjectAdapter extends BaseAdapter implements ListAdapter {
 
     private LayoutInflater mInflater;
     int mLayout;
@@ -113,7 +115,8 @@ public class AbstractObjectAdapter extends BaseAdapter {
     }
 
     private void setViewText(TextView v, String text) {
-        v.setText(text);
+        String parsedHtml= Html.fromHtml(text).toString();
+        v.setText(parsedHtml);
     }
 
 

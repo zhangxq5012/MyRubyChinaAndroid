@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.test.ActivityInstrumentationTestCase2;
 
-import cn.magic.rubychina.main.MainActivity;
+import cn.magic.rubychina.ui.MainActivity;
 import cn.magic.rubychina.main.R;
 
 /**

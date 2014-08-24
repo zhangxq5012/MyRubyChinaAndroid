@@ -1,4 +1,4 @@
-package cn.magic.rubychina.main;
+package cn.magic.rubychina.ui;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -21,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import cn.magic.rubychina.main.R;
 
 
 /**

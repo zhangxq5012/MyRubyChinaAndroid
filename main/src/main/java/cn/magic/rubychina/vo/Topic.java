@@ -1,5 +1,8 @@
 package cn.magic.rubychina.vo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,7 +12,7 @@ import java.util.List;
 /**
  * Created by magic on 2014/7/26.
  */
-public class Topic extends AbstractObject {
+public class Topic extends AbstractObject   {
     private static final DateFormat LAST_REPLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static final String LAST_REPLY_TEMPLATE = "于%s前回复";
 
@@ -39,13 +42,14 @@ public class Topic extends AbstractObject {
     }
 
     public String getReplied_at() {
-        String reply;
-        if (replied_at == null) {
-            reply = "还没有回复，快进去讨论吧！";
-        } else {
-            reply = String.format(LAST_REPLY_TEMPLATE, getShowTimeString(replied_at, LAST_REPLY_FORMAT));
-        }
-        return reply;
+        return getShowTime(replied_at);
+//        String reply;
+//        if (replied_at == null) {
+//            reply = "还没有回复，快进去讨论吧！";
+//        } else {
+//            reply = String.format(LAST_REPLY_TEMPLATE, getShowTimeString(replied_at, LAST_REPLY_FORMAT));
+//        }
+//        return reply;
     }
 
     public void setReplied_at(String replied_at) {
@@ -160,6 +164,16 @@ public class Topic extends AbstractObject {
         }
     }
 
+    public static String getShowTime(String date){
+        String returnDate;
+        if (date == null) {
+            returnDate = "还没有回复，快进去讨论吧！";
+        } else {
+            returnDate = String.format(LAST_REPLY_TEMPLATE, getShowTimeString(date, LAST_REPLY_FORMAT));
+        }
+        return returnDate;
+    }
+
 
 
     public User user;
@@ -198,4 +212,5 @@ public class Topic extends AbstractObject {
     }
 
     public List<TopicReply> replies;
+
 }

@@ -49,7 +49,7 @@ public class TopicReply extends AbstractObject{
     }
 
     public String getUpdated_at() {
-        return updated_at;
+        return Topic.getShowTime(updated_at);
     }
 
     public void setUpdated_at(String updated_at) {

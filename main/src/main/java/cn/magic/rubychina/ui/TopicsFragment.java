@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,11 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 import cn.magic.rubychina.adapter.AbstractObjectAdapter;
-import cn.magic.rubychina.main.MainActivity;
 import cn.magic.rubychina.main.R;
 import cn.magic.rubychina.util.NetWorkUtil;
 import cn.magic.rubychina.util.StringCharsetRequest;
-import cn.magic.rubychina.vo.AbstractObject;
 import cn.magic.rubychina.vo.Topic;
 
 /**
@@ -102,7 +95,7 @@ public class TopicsFragment extends Fragment {
 
             }
         });
-        adapter = new AbstractObjectAdapter(getActivity(), R.layout.topic_item, topicList, FROM, TO);
+        adapter = new AbstractObjectAdapter(getActivity(), R.layout.topic_header_item, topicList, FROM, TO);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new TopicItemClickListener());
