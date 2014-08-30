@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import java.net.URL;
 import java.util.Map;
 
+import cn.magic.rubychina.app.RubyApplication;
+
 /**
  * Created by magic on 2014/7/26.
  * 访问网络需要用到的类
@@ -33,6 +35,8 @@ public class NetWorkUtil {
 
     public static final String TOPIC_INFO = API + "/"+"topics/%s.json";
 
+    public static final String SIGN_IN = RUBYCHINAURL + "/"+"account/sign_in.json";
+
     RequestQueue requestQueue;
 
     private static Context context;
@@ -44,6 +48,14 @@ public class NetWorkUtil {
     }
 
     public static NetWorkUtil getInstance(Context context) {
+        if (netWorkUtil == null) {
+            netWorkUtil = new NetWorkUtil(context);
+        }
+        return netWorkUtil;
+    }
+
+    public static NetWorkUtil getInstance() {
+        context= RubyApplication.getContext();
         if (netWorkUtil == null) {
             netWorkUtil = new NetWorkUtil(context);
         }
@@ -64,12 +76,12 @@ public class NetWorkUtil {
 
     public ImageLoader getImageLoader() {
         ImageLoader loader = new ImageLoader(getRequestQueue(),
-                 LruBitmapCache.getInstance(context));
+                 LruBitmapCache.getInstance());
         return loader;
     }
 
 
-    public String appendParam(String url,Map<String,String> param){
+    public static String appendParam(String url,Map<String,String> param){
         StringBuffer strb=new StringBuffer();
         if(param.size()>0){
             strb.append("?");

@@ -56,9 +56,9 @@ public class LruBitmapCache extends LruCache<String, Bitmap>
 
     }
 
-    public static LruBitmapCache getInstance(Context ctx){
+    public static LruBitmapCache getInstance(){
         if(lruBitmapCache==null){
-            lruBitmapCache=new LruBitmapCache(ctx.getApplicationContext());
+            lruBitmapCache=new LruBitmapCache(RubyApplication.getContext());
         }
         return lruBitmapCache;
 

@@ -3,7 +3,6 @@
     package="cn.magic.rubychina.main" >
 
     <application
-
         android:name="cn.magic.rubychina.app.RubyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -12,16 +11,20 @@
         <activity
             android:name="cn.magic.rubychina.ui.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="cn.magic.rubychina.ui.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

@@ -7,6 +7,8 @@ public class User extends AbstractObject {
     public String login;
     public String id;
     public String avatar_url;
+    public String email;
+    public String private_token;
 
     public String getLogin() {
         return login;

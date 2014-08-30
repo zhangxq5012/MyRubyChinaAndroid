@@ -82,7 +82,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed{
         magictet=rootView.findViewById(R.id.topic_header);
 
         imageView = (NetworkImageView) rootView.findViewById(R.id.avatarView);
-        loginText = (TextView) rootView.findViewById(R.id.login);
+        loginText = (TextView) rootView.findViewById(R.id.m_login);
         repliesCount = (TextView) rootView.findViewById(R.id.replies_count);
         title = (TextView) rootView.findViewById(R.id.title);
         nodeName = (TextView) rootView.findViewById(R.id.node_name);

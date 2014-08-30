@@ -1,31 +1,28 @@
 package cn.magic.rubychina.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
 
 import java.util.List;
 
+import cn.magic.rubychina.util.HtmlImageGetter;
 import cn.magic.rubychina.util.NetWorkUtil;
 import cn.magic.rubychina.vo.AbstractObject;
 
 /**
  * Created by magic on 2014/7/28.
  */
-public class AbstractObjectAdapter extends BaseAdapter implements ListAdapter {
+public class AbstractObjectAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     int mLayout;
@@ -115,8 +112,9 @@ public class AbstractObjectAdapter extends BaseAdapter implements ListAdapter {
     }
 
     private void setViewText(TextView v, String text) {
-        String parsedHtml= Html.fromHtml(text).toString();
+        Spanned parsedHtml= Html.fromHtml(text,new HtmlImageGetter(mContext,v,text),null);
         v.setText(parsedHtml);
+
     }
 
 

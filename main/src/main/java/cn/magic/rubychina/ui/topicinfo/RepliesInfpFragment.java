@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -51,7 +53,7 @@ public class RepliesInfpFragment extends Fragment implements AbsListView.OnItemC
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private BaseAdapter mAdapter;
 
     private List replies;
     public static final String[] FROM = new String[]{Topic.AVATAR_URL, Topic.LOGIN, TopicReply.UPDATED_AT, TopicReply.BODY_HTML};
@@ -83,7 +85,6 @@ public class RepliesInfpFragment extends Fragment implements AbsListView.OnItemC
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
         mAdapter = new AbstractObjectAdapter(getActivity(), R.layout.reply_info_item, replies,FROM,TO);
     }
 
@@ -94,7 +95,7 @@ public class RepliesInfpFragment extends Fragment implements AbsListView.OnItemC
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);

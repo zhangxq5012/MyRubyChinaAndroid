@@ -17,9 +17,10 @@
 
         <WebView
             android:id="@+id/topic_body"
-            android:padding="14dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:scrollbarStyle="outsideOverlay"
             android:text="@string/hello_blank_fragment" />
     <ListView
         android:id="@+id/replies_list"

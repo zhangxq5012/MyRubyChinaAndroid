@@ -1,5 +1,6 @@
 package cn.magic.rubychina.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,15 +12,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Toast;
 
 import cn.magic.rubychina.main.R;
 import cn.magic.rubychina.ui.itf.IBackPressed;
 import cn.magic.rubychina.ui.topicinfo.TopicInfoFragment;
+import cn.magic.rubychina.util.UserUtils;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,TopicsFragment.OnTopicSelectedListener
 ,TopicInfoFragment.OnFragmentInteractionListener{
+
+    public static final  int LOGINREQUEST=256;
+
 
     String TAG="MainActivity";
 
@@ -97,6 +103,9 @@ public class MainActivity extends ActionBarActivity
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
+            if (UserUtils.isLogined()){
+                menu.findItem(R.id.m_login).setTitle("退出");
+            }
             restoreActionBar();
             return true;
         }
@@ -105,12 +114,17 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.m_login) {
+            if(UserUtils.isLogined()){
+                UserUtils.clearUser();
+                invalidateOptionsMenu();
+                Toast.makeText(this,getString(R.string.exitSuccess),Toast.LENGTH_LONG).show();
+            }else{
+                Intent intent=new Intent(this,LoginActivity.class);
+                startActivityForResult(intent, LOGINREQUEST);
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -151,5 +165,15 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==LOGINREQUEST){
+            if(resultCode==LoginActivity.LOGINSUCCESS){
+                invalidateOptionsMenu();//更新菜单项
+            }
+        }
     }
 }

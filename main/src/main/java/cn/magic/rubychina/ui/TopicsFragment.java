@@ -42,7 +42,7 @@ public class TopicsFragment extends Fragment {
 
     public static final String[] FROM = new String[]{Topic.AVATAR_URL, Topic.LOGIN, Topic.REPLIES_COUNT,
             Topic.TITLE, Topic.NODE_NAME, Topic.LAST_REPLY_USER_LOGIN, Topic.REPLIED_AT};
-    public static final int[] TO = {R.id.avatarView, R.id.login, R.id.replies_count, R.id.title
+    public static final int[] TO = {R.id.avatarView, R.id.m_login, R.id.replies_count, R.id.title
             , R.id.node_name, R.id.last_reply_user_login, R.id.replied_at};
     AbstractObjectAdapter adapter;
     PullToRefreshListView listView;
