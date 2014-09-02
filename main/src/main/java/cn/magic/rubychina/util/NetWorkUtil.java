@@ -30,12 +30,16 @@ public class NetWorkUtil {
     public static final String RUBYCHINAURL = "https://ruby-china.org";
     //RUBYCHINA 的API的url
     public static final String API = RUBYCHINAURL + "/" + "api";
+    public static final String API2 = RUBYCHINAURL +"/"+ "api/v2";
+
     //文章列表的URL
     public static final String TOPICS = API + "/" + "topics.json";
 
     public static final String TOPIC_INFO = API + "/"+"topics/%s.json";
 
     public static final String SIGN_IN = RUBYCHINAURL + "/"+"account/sign_in.json";
+
+    public static final String TOPIC_REPLY = API2 + "/"+"topics/%s/replies.json";
 
     RequestQueue requestQueue;
 

@@ -15,7 +15,6 @@
             android:layout_height="24dp"
             android:layout_toRightOf="@id/r_reply_user_avatar"
             android:gravity="left"
-            android:text="test"
             />
         <TextView
             android:id="@+id/r_replied_at"
@@ -24,7 +23,7 @@
             android:layout_toRightOf="@id/r_login"
             android:paddingLeft="48dp"
             android:gravity="left"
-            android:text="test" />
+            />
         <TextView
             android:id="@+id/r_replied_body_html"
             android:textSize="18dp"

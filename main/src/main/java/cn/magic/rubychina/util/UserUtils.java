@@ -3,6 +3,8 @@ package cn.magic.rubychina.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Map;
+
 import cn.magic.rubychina.app.RubyApplication;
 
 /**
@@ -10,9 +12,10 @@ import cn.magic.rubychina.app.RubyApplication;
  */
 public class UserUtils {
     private static final String USERTAG = "user";
-    private static final String TOKEN = "private_token";
+    private static final String PRIVATE_TOKEN = "private_token";
     private static final String LOGIN="login";
     private static final String EMAIL="email";
+    public static final String TOKEN="token";
 
     public static Context getAppContext() {
         return RubyApplication.getContext();
@@ -26,7 +29,7 @@ public class UserUtils {
 
     public static void saveUserToken(String private_token) {
         SharedPreferences.Editor editor = getUserPreference().edit();
-        editor.putString(TOKEN,private_token);
+        editor.putString(PRIVATE_TOKEN,private_token);
         editor.commit();
     }
 
@@ -41,7 +44,7 @@ public class UserUtils {
     }
 
     public static String getUserToken() {
-        return getUserPreference().getString(TOKEN, "");
+        return getUserPreference().getString(PRIVATE_TOKEN, "");
     }
 
     public static String getUserEmail() {
@@ -59,5 +62,10 @@ public class UserUtils {
 
     public static boolean isLogined() {
         return getUserToken().length() > 0;
+    }
+
+    public static Map putToken(Map param){
+        param.put(TOKEN,getUserToken());
+        return param;
     }
 }

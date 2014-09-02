@@ -22,12 +22,58 @@
             android:padding="14dp"
             android:scrollbarStyle="outsideOverlay"
             android:text="@string/hello_blank_fragment" />
-    <ListView
-        android:id="@+id/replies_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:divider="@color/blue"
-        android:dividerHeight="18dp"
+
+    <RelativeLayout
+        android:id="@+id/reply_infos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        />
+        >
+
+        <LinearLayout
+            android:id="@+id/reply_Line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <EditText
+                android:id="@+id/my_reply"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:background="@color/gray"
+                android:hint="@string/reply_hint"
+                
+                />
+            <Button
+                android:id="@+id/send_reply"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="4"
+                android:background="@color/lightblue"
+                android:gravity="center"
+                android:text="@string/send"
+                />
+            </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/gray"
+            android:layout_above="@id/reply_Line"
+            ></View>
+
+        <ListView
+            android:id="@+id/replies_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/reply_Line"
+            android:divider="@color/blue"
+            android:dividerHeight="18dp"
+            />
+        </RelativeLayout>
+
 </LinearLayout>

@@ -26,5 +26,12 @@
     <string name="passwdNotNull">密码不允许为空</string>
     <string name="login_success">登陆成功</string>
 
+    <!--回复界面-->
+    <string name="reply_hint">说一句</string>
+    <string name="send">发送</string>
+    <string name="reply_empty">回复内容不能为空字符</string>
+    <string name="reply_success">回复成功！</string>
+    <string name="reply_failed">回复失败！</string>
+
 
 </resources>
