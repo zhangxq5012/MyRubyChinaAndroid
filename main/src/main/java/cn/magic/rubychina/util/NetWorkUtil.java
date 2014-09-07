@@ -41,6 +41,9 @@ public class NetWorkUtil {
 
     public static final String TOPIC_REPLY = API2 + "/"+"topics/%s/replies.json";
 
+
+    public static final String TOPIC_NEW = API2 +"/"+ "topics.json";//发布新帖的api
+
     RequestQueue requestQueue;
 
     private static Context context;

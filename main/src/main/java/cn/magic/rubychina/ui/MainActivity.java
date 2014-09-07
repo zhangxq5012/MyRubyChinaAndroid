@@ -25,6 +25,7 @@ public class MainActivity extends ActionBarActivity
 ,TopicInfoFragment.OnFragmentInteractionListener{
 
     public static final  int LOGINREQUEST=256;
+    public static final  int SENDTOPICREQUEST=256;
 
 
     String TAG="MainActivity";
@@ -56,14 +57,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        initFragments();
         onNavigationDrawerItemSelected(0);
 
-    }
-
-    private void initFragments() {
-        fragments=new Fragment[2];
-        fragments[0]= TopicsFragment.newInstance();
     }
 
     @Override
@@ -126,6 +121,11 @@ public class MainActivity extends ActionBarActivity
                 return true;
             }
         }
+        if(id==R.id.post_topic){
+            Intent intent=new Intent(this,NewTopicActivity.class);
+            startActivityForResult(intent,SENDTOPICREQUEST);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -173,6 +173,13 @@ public class MainActivity extends ActionBarActivity
         if(requestCode==LOGINREQUEST){
             if(resultCode==LoginActivity.LOGINSUCCESS){
                 invalidateOptionsMenu();//更新菜单项
+            }
+        }
+        if(requestCode==SENDTOPICREQUEST){
+            if(resultCode==NewTopicActivity.SENDSUCCESS){
+                invalidateOptionsMenu();//更新菜单项
+                String topicID=data.getStringExtra(NewTopicActivity.TOPICID);
+                onTopicSelect(topicID);
             }
         }
     }

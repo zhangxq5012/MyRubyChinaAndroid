@@ -22,6 +22,10 @@
             android:name="cn.magic.rubychina.ui.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity
+            android:name="cn.magic.rubychina.ui.NewTopicActivity"
+            android:label="@string/title_activity_new_topic" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

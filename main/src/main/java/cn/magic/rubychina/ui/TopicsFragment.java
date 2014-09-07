@@ -54,12 +54,6 @@ public class TopicsFragment extends Fragment {
     }.getType();
 
     /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    /**
      * Returns a new instance of this fragment for the given section
      * number.
      */

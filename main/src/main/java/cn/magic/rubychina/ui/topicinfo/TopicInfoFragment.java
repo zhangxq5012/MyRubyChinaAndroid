@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import cn.magic.rubychina.adapter.AbstractObjectAdapter;
 import cn.magic.rubychina.main.R;
 import cn.magic.rubychina.ui.LoginActivity;
@@ -58,35 +60,25 @@ import cn.magic.rubychina.vo.TopicReply;
 public class TopicInfoFragment extends Fragment implements IBackPressed {
     public static final String MENUREPLYLIST = "回复列表";
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "TOPICID";
+    private static final String TOPICID = "TOPICID";
     private Topic topicInfo;
-    // TODO: Rename and change types of parameters
     private String topicID;
-
-    View rootView;
-
-
     boolean repliesState = false;
 
     //界面组件
-    NetworkImageView imageView;
-    TextView loginText;
-    TextView repliesCount;
-    TextView title;
-    TextView nodeName;
-    TextView lastReplyUserLogin;
-    TextView repliedAt;
-    WebView webbody;
-
-    View magictet;
-
-
-    ListView repliesList;
-    RelativeLayout relativeLayout;
-    EditText replyEdit;
-    Button boSendReply;
+    @InjectView(R.id.avatarView) NetworkImageView imageView;
+    @InjectView(R.id.m_login)TextView loginText;
+    @InjectView(R.id.replies_count) TextView repliesCount;
+    @InjectView(R.id.title)TextView title;
+    @InjectView(R.id.node_name)TextView nodeName;
+    @InjectView(R.id.last_reply_user_login)TextView lastReplyUserLogin;
+    @InjectView(R.id.replied_at)TextView repliedAt;
+    @InjectView(R.id.topic_body)WebView webbody;
+    @InjectView(R.id.topic_header)View magictet;
+    @InjectView(R.id.replies_list) ListView repliesList;
+    @InjectView(R.id.reply_infos)RelativeLayout relativeLayout;
+    @InjectView(R.id.my_reply)EditText replyEdit;
+    @InjectView(R.id.send_reply) Button boSendReply;
 
 
     private AbstractObjectAdapter repliesAdapter;
@@ -97,44 +89,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
     private OnFragmentInteractionListener mListener;
 
 
-    private void getViews() {
-        magictet = rootView.findViewById(R.id.topic_header);
 
-        imageView = (NetworkImageView) rootView.findViewById(R.id.avatarView);
-        loginText = (TextView) rootView.findViewById(R.id.m_login);
-        repliesCount = (TextView) rootView.findViewById(R.id.replies_count);
-        title = (TextView) rootView.findViewById(R.id.title);
-        nodeName = (TextView) rootView.findViewById(R.id.node_name);
-        lastReplyUserLogin = (TextView) rootView.findViewById(R.id.last_reply_user_login);
-        repliedAt = (TextView) rootView.findViewById(R.id.replied_at);
-        webbody = (WebView) rootView.findViewById(R.id.topic_body);
-        webbody.setHorizontalScrollbarOverlay(false);
-        webbody.getSettings().setDefaultTextEncodingName(NetWorkUtil.CHARSET);
-        webbody.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-
-
-        relativeLayout = (RelativeLayout) rootView.findViewById(R.id.reply_infos);
-        replyEdit = (EditText) rootView.findViewById(R.id.my_reply);
-        boSendReply = (Button) rootView.findViewById(R.id.send_reply);
-        boSendReply.setOnClickListener(new SendReplyListener());
-
-        repliesList = (ListView) rootView.findViewById(R.id.replies_list);
-        repliesAdapter = new AbstractObjectAdapter(getActivity(), R.layout.reply_info_item, replies, FROM, TO);
-        repliesList.setAdapter(repliesAdapter);
-        repliesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String text = (position + 1) + "楼 @" + replies.get(position).getUser().getLogin();
-                replyEdit.setText(text);
-                replyEdit.requestFocus();
-                replyEdit.setSelection(replyEdit.getText().length());
-
-                InputMethodManager inputManager =
-                        (InputMethodManager) replyEdit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.showSoftInput(replyEdit, 0);
-            }
-        });
-    }
 
     private void updateVies() {
         imageView.setImageUrl(topicInfo.getUser().getAvatar_url(), NetWorkUtil.getInstance(getActivity()).getImageLoader());
@@ -146,11 +101,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
         repliedAt.setText(topicInfo.getReplied_at());
         String html = topicInfo.getBody_html();
         webbody.loadData(html, "text/html; charset=UTF-8", null);
-
-        replies = topicInfo.getReplies();
         repliesAdapter.setAbstractObjects(replies);
-
-//        repliesAdapter.notifyDataSetChanged();
     }
 
 
@@ -169,7 +120,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
     public static TopicInfoFragment newInstance(String param1) {
         TopicInfoFragment fragment = new TopicInfoFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(TOPICID, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -178,7 +129,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            topicID = getArguments().getString(ARG_PARAM1);
+            topicID = getArguments().getString(TOPICID);
         }
         setHasOptionsMenu(true);
     }
@@ -195,12 +146,41 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.topic_info, container, false);
-        getViews();
+        View rootView = inflater.inflate(R.layout.topic_info, container, false);
+        ButterKnife.inject(this, rootView);
+        initViewConfig();
         return rootView;
 //        return inflater.inflate(R.layout.fragment_topic_info, container, false);
     }
 
+    private void initViewConfig() {
+        webbody.setHorizontalScrollbarOverlay(false);
+        webbody.getSettings().setDefaultTextEncodingName(NetWorkUtil.CHARSET);
+        webbody.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+
+        boSendReply.setOnClickListener(new SendReplyListener());
+
+        repliesAdapter = new AbstractObjectAdapter(getActivity(), R.layout.reply_info_item, replies, FROM, TO);
+        repliesList.setAdapter(repliesAdapter);
+        repliesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String text = (position + 1) + "楼 @" + replies.get(position).getUser().getLogin();
+                replyEdit.setText(text);
+                replyEdit.requestFocus();
+                replyEdit.setSelection(replyEdit.getText().length());
+                InputMethodManager inputManager =
+                        (InputMethodManager) replyEdit.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(replyEdit, 0);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

@@ -4,7 +4,7 @@
     <string name="app_name">RubyChina</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
+    <string name="post_topic">发帖</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">文章正文</string>
 
@@ -14,11 +14,10 @@
     <string name="title_activity_login">登录</string>
     <string name="hello_world">Hello world!</string>
 
-    <!--主界面-->
+    <!-- 主界面 -->
     <string name="exitSuccess">退出成功</string>
 
-
-    <!--登录界面-->
+    <!-- 登录界面 -->
     <string name="userName">用户名</string>
     <string name="passwd">密码</string>
     <string name="login">登录</string>
@@ -26,12 +25,28 @@
     <string name="passwdNotNull">密码不允许为空</string>
     <string name="login_success">登陆成功</string>
 
-    <!--回复界面-->
+    <!-- 回复界面 -->
     <string name="reply_hint">说一句</string>
     <string name="send">发送</string>
     <string name="reply_empty">回复内容不能为空字符</string>
     <string name="reply_success">回复成功！</string>
     <string name="reply_failed">回复失败！</string>
+    <string name="title_activity_new_topic">NewTopicActivity</string>
 
+
+    <!--发布新帖界面-->
+    <string-array name="node_category_arrays">
+        <item>Ruby</item>
+        <item>分享</item>
+        <item>Web开发</item>
+        <item>Mobile</item>
+        <item>Languages</item>
+        <item>Ruby China</item>
+        <item>活动</item>
+    </string-array>
+    <string name="title">标题</string>
+    <string name="content">内容</string>
+   <string name="send_success">发帖成功</string>
+    <string name="not_allow_null">标题和内容不能为空字符</string>
 
 </resources>
