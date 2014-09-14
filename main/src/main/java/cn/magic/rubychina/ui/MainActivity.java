@@ -34,6 +34,8 @@ public class MainActivity extends ActionBarActivity
 
     IBackPressed currentFrag;
 
+    Fragment currentFragment;
+
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -57,6 +59,8 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //打开文章列表界面
         onNavigationDrawerItemSelected(0);
 
     }
@@ -64,10 +68,14 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
+        Fragment fragment=null;
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragments!=null){
+        if(position==0){
+            fragment=TopicsFragment.newInstance();
+        }
+        if(fragment!=null){
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, fragments[position]).addToBackStack(null)
+                    .replace(R.id.container,fragment).addToBackStack(null)
                     .commit();
         }
     }
@@ -124,6 +132,7 @@ public class MainActivity extends ActionBarActivity
         if(id==R.id.post_topic){
             Intent intent=new Intent(this,NewTopicActivity.class);
             startActivityForResult(intent,SENDTOPICREQUEST);
+            overridePendingTransition(R.anim.push_up_in,R.anim.push_up_out);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -133,17 +142,18 @@ public class MainActivity extends ActionBarActivity
 
     }
     public void onTopicSelect(String topicID){
-        replaceFragment( TopicInfoFragment.newInstance(topicID));
+        TopicInfoFragment topicInfoFragment=TopicInfoFragment.newInstance(topicID);
+        replaceFragment(topicInfoFragment );
         Log.e(TAG,"testTopicSelected"+topicID);
+        currentFrag=topicInfoFragment;
     }
 
-    private void replaceFragment(TopicInfoFragment topicInfoFragment) {
-
+    private void replaceFragment(Fragment topicInfoFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction=fragmentManager.beginTransaction();
         transaction.replace(R.id.container,
                 topicInfoFragment).addToBackStack(null).commit();
-        currentFrag=topicInfoFragment;
+
     }
 
 

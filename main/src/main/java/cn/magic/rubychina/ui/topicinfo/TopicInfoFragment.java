@@ -3,9 +3,13 @@ package cn.magic.rubychina.ui.topicinfo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,10 +25,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.activeandroid.content.ContentProvider;
+import com.activeandroid.query.Delete;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -39,7 +46,8 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.magic.rubychina.adapter.AbstractObjectAdapter;
+import cn.magic.rubychina.dao.BaseDao;
+import cn.magic.rubychina.adapter.ExpandCursorAdapter;
 import cn.magic.rubychina.main.R;
 import cn.magic.rubychina.ui.LoginActivity;
 import cn.magic.rubychina.ui.itf.IBackPressed;
@@ -57,7 +65,7 @@ import cn.magic.rubychina.vo.TopicReply;
  * Use the {@link TopicInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TopicInfoFragment extends Fragment implements IBackPressed {
+public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderManager.LoaderCallbacks<Cursor> {
     public static final String MENUREPLYLIST = "回复列表";
 
     private static final String TOPICID = "TOPICID";
@@ -80,8 +88,11 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
     @InjectView(R.id.my_reply)EditText replyEdit;
     @InjectView(R.id.send_reply) Button boSendReply;
 
+    @InjectView(R.id.topicProgress)
+    ProgressBar topicProgress;
 
-    private AbstractObjectAdapter repliesAdapter;
+
+    private ExpandCursorAdapter repliesAdapter;
     private List<TopicReply> replies;
     public static final String[] FROM = new String[]{Topic.AVATAR_URL, Topic.LOGIN, TopicReply.UPDATED_AT, TopicReply.BODY_HTML};
     public static final int[] TO = {R.id.r_reply_user_avatar, R.id.r_login, R.id.r_replied_at, R.id.r_replied_body_html};
@@ -101,7 +112,24 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
         repliedAt.setText(topicInfo.getReplied_at());
         String html = topicInfo.getBody_html();
         webbody.loadData(html, "text/html; charset=UTF-8", null);
-        repliesAdapter.setAbstractObjects(replies);
+        replies=topicInfo.getReplies();
+
+        new Delete().from(TopicReply.class).execute();
+        addUserInfo(replies);
+        BaseDao.insertList(replies);
+
+//        repliesAdapter.setAbstractObjects(replies);
+
+        changeToReplyState(false);
+        topicProgress.setVisibility(View.GONE);
+    }
+
+    private void addUserInfo(List<TopicReply> replies) {
+        if(replies!=null&&replies.size()>0){
+            for(TopicReply reply:replies){
+                reply.addUserInfo();
+            }
+        }
     }
 
 
@@ -131,6 +159,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
         if (getArguments() != null) {
             topicID = getArguments().getString(TOPICID);
         }
+        getLoaderManager().initLoader(2, null, this);
         setHasOptionsMenu(true);
     }
 
@@ -160,7 +189,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
 
         boSendReply.setOnClickListener(new SendReplyListener());
 
-        repliesAdapter = new AbstractObjectAdapter(getActivity(), R.layout.reply_info_item, replies, FROM, TO);
+        repliesAdapter = new ExpandCursorAdapter(getActivity(), R.layout.reply_info_item, null, FROM, TO);
         repliesList.setAdapter(repliesAdapter);
         repliesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -227,6 +256,22 @@ public class TopicInfoFragment extends Fragment implements IBackPressed {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), ContentProvider.createUri(TopicReply.class, null), null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Cursor data) {
+        repliesAdapter.swapCursor(data);
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+        repliesAdapter.swapCursor(null);
     }
 
 

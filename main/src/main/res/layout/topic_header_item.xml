@@ -3,29 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="8dp"
+    android:background="@color/white"
     android:id="@+id/topic_item">
 
 
-    <LinearLayout
-        android:id="@+id/imageLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingRight="8dp"
-        >
+    <!--<LinearLayout-->
+        <!--android:id="@+id/imageLayout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingRight="8dp"-->
+        <!-->-->
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/avatarView"
             android:src="@drawable/default_avatar"
             android:layout_width="48dip"
             android:layout_height="48dip" />
-        <TextView
-            android:id="@+id/m_login"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="test"
-            />
-        </LinearLayout>
+
+    <TextView
+        android:id="@+id/m_login"
+        android:gravity="left"
+        android:layout_toRightOf="@id/avatarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="test"
+        />
     <TextView
         android:id="@+id/replies_count"
         android:layout_width="wrap_content"
@@ -43,9 +46,11 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageLayout"
+        android:layout_toRightOf="@id/avatarView"
         android:layout_toLeftOf="@id/replies_count"
-        android:textSize="20dp"
+        android:layout_below="@id/m_login"
+        android:singleLine="true"
+        android:textSize="14sp"
         android:text="testText"
 
         />
@@ -54,7 +59,7 @@
         android:id="@+id/node_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageLayout"
+        android:layout_toRightOf="@id/avatarView"
         android:layout_below="@id/title"
         android:text="share"
         android:textColor="@color/blue"

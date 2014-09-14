@@ -2,6 +2,10 @@ package cn.magic.rubychina.vo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.BaseColumns;
+
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,14 +16,68 @@ import java.util.List;
 /**
  * Created by magic on 2014/7/26.
  */
+
+@Table(name = "topic",id = BaseColumns._ID)
 public class Topic extends AbstractObject   {
+
+    @Column
+    public User user;
+
+    public List<TopicReply> replies;
+
+    @Column
+    public String avatar_url;
+    @Column
+    public String login;
+    @Column(unique = true)
+    public String id;
+    @Column
+    public String title;
+    @Column
+    public String created_at;
+    @Column
+    public String replied_at;
+    @Column
+    public String replies_count;
+    @Column
+    public String node_name;
+    @Column
+    public String node_id;
+    @Column
+    public String last_reply_user_id;
+    @Column
+    public String last_reply_user_login;
+
+
+    @Column
+    public String body;
+    @Column
+    public String hits;
+
+    @Column
+    public int page;
+
+    public static final String AVATAR_URL = "avatar_url";
+    public static final String LOGIN = "login";
+    public static final String ID = "id";
+    public static final String TITLE = "title";
+    public static final String CREATED_AT = "created_at";
+    public static final String REPLIED_AT = "replied_at";
+    public static final String REPLIES_COUNT = "replies_count";
+    public static final String NODE_NAME = "node_name";
+    public static final String NODE_ID = "node_id";
+    public static final String LAST_REPLY_USER_ID = "last_reply_user_id";
+    public static final String LAST_REPLY_USER_LOGIN = "last_reply_user_login";
+    public String body_html;
+
     private static final DateFormat LAST_REPLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static final String LAST_REPLY_TEMPLATE = "于%s前回复";
 
+    public Topic(){
 
-    public String getId() {
-        return id;
     }
+
+
 
     public void setId(String id) {
         this.id = id;
@@ -175,32 +233,22 @@ public class Topic extends AbstractObject   {
     }
 
 
+    public String getBody() {
+        return body;
+    }
 
-    public User user;
-    public String avatar_url;
-    public String login;
-    public String id;
-    public String title;
-    public String created_at;
-    public String replied_at;
-    public String replies_count;
-    public String node_name;
-    public String node_id;
-    public String last_reply_user_id;
-    public String last_reply_user_login;
+    public void setBody(String body) {
+        this.body = body;
+    }
 
-    public static final String AVATAR_URL = "avatar_url";
-    public static final String LOGIN = "login";
-    public static final String ID = "id";
-    public static final String TITLE = "title";
-    public static final String CREATED_AT = "created_at";
-    public static final String REPLIED_AT = "replied_at";
-    public static final String REPLIES_COUNT = "replies_count";
-    public static final String NODE_NAME = "node_name";
-    public static final String NODE_ID = "node_id";
-    public static final String LAST_REPLY_USER_ID = "last_reply_user_id";
-    public static final String LAST_REPLY_USER_LOGIN = "last_reply_user_login";
-    public String body_html;
+    public String getHits() {
+        return hits;
+    }
+
+    public void setHits(String hits) {
+        this.hits = hits;
+    }
+
 
 
     public List<TopicReply> getReplies() {
@@ -211,6 +259,14 @@ public class Topic extends AbstractObject   {
         this.replies = replies;
     }
 
-    public List<TopicReply> replies;
+
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
 
 }
