@@ -10,7 +10,7 @@
 
     <!-- 节点名称 -->
     <string name="title_hotdiscuss">热门讨论</string>
-    <string name="title_nodeclassify">Section 2</string>
+    <string name="title_nodeclassify">节点分类</string>
     <string name="title_activity_login">登录</string>
     <string name="hello_world">Hello world!</string>
 

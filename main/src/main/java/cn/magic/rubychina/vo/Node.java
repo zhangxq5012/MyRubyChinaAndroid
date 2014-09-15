@@ -1,17 +1,40 @@
 package cn.magic.rubychina.vo;
 
+import android.provider.BaseColumns;
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 /**
  * Created by magic on 2014/9/3.
  */
-public class Node {
+@Table(name = "node",id = BaseColumns._ID)
+public class Node extends Model{
 
+
+
+    @Column
     public String id;
+    @Column
     public String name;
+    @Column
     public String topics_count;
+    @Column
     public String summary;
+    @Column
     public String section_id;
+    @Column
     public String sort;
+    @Column
     public String section_name;
+
+    public static String SECTION_NAME="section_name";
+    public static String SECTION_ID="section_id";
+    public static String SORT="sort";
+    public static String SUMMARY="summary";
+    public static final String NAME ="name" ;
+
 
     public static final String nodes_id[][] = {
             {"52","2","3","44","1","29","37","43","45","47","54",},

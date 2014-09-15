@@ -5,7 +5,7 @@
     <application
         android:name="cn.magic.rubychina.app.RubyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/rubychina"
+        android:logo="@drawable/rubychina"
         android:theme="@style/AppTheme" >
         <provider
             android:name="com.activeandroid.content.ContentProvider"
