@@ -124,5 +124,7 @@ public class TopicReply extends AbstractObject{
     public void addUserInfo() {
         setAvatar_url();
         setLogin();
+        setUpdated_at(getUpdated_at());
+        setCreated_at(Topic.getShowTime(getCreated_at()));
     }
 }

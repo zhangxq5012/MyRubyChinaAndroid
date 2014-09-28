@@ -23,11 +23,10 @@
         android:layout_height="24dp"
         android:layout_toRightOf="@id/r_login"
         android:paddingLeft="48dp"
-        android:gravity="left" />
+        android:gravity="right" />
 
     <TextView
         android:id="@+id/r_replied_body_html"
-        android:textSize="18dp"
         android:layout_below="@id/r_replied_at"
         android:layout_toRightOf="@id/r_reply_user_avatar"
         android:layout_width="match_parent"

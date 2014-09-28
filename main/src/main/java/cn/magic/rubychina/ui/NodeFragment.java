@@ -22,9 +22,9 @@ import com.activeandroid.content.ContentProvider;
 
 import java.util.List;
 
+import cn.magic.rubychina.adapter.ExpandCursorAdapter;
 import cn.magic.rubychina.main.R;
 
-import cn.magic.rubychina.ui.dummy.DummyContent;
 import cn.magic.rubychina.ui.itf.OnFragmentInteractionListener;
 import cn.magic.rubychina.vo.Node;
 
@@ -57,7 +57,7 @@ public class NodeFragment extends Fragment implements AbsListView.OnItemClickLis
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private CursorAdapter mAdapter;
+    private ExpandCursorAdapter mAdapter;
 
 
     public static NodeFragment newInstance(String sectionName) {
@@ -78,7 +78,7 @@ public class NodeFragment extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter=new SimpleCursorAdapter(getActivity(),R.layout.node,null,from,to);
+        mAdapter=new ExpandCursorAdapter(getActivity(),R.layout.node,null,from,to);
         getLoaderManager().initLoader(NODE_LOADER, getArguments(), this);
     }
 
@@ -118,7 +118,11 @@ public class NodeFragment extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != mListener) {
-
+            Bundle bundle=new Bundle();
+            bundle.putString(OnFragmentInteractionListener.SOURCE,NodeFragment.class.getName());
+            String nodeID=mAdapter.getID(position);
+            bundle.putString(OnFragmentInteractionListener.ARGS,nodeID);
+            mListener.onFragmentInteraction(bundle);
         }
     }
 

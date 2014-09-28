@@ -22,6 +22,8 @@ import com.activeandroid.ActiveAndroid;
 import com.activeandroid.content.ContentProvider;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -48,6 +50,11 @@ import cn.magic.rubychina.vo.Topic;
  */
 public class TopicsFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String REQUEST_TAG = "TopicsFragment";
+
+    public String url;
+
     public static int TOPIC_LOADER = 1;
 
     OnTopicSelectedListener mCallback;
@@ -69,6 +76,8 @@ public class TopicsFragment extends Fragment implements
     ExpandCursorAdapter mAdapter;
     View rootView;
 
+    LoadingFooter footer;
+
     ArrayList topicList;
     int page = 1;
 
@@ -76,18 +85,25 @@ public class TopicsFragment extends Fragment implements
     private Type listType = new TypeToken<List<Topic>>() {
     }.getType();
 
+    public TopicsFragment(String url) {
+        this.url = url;
+    }
+
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static TopicsFragment newInstance() {
-        if (fragment == null) {
-            fragment = new TopicsFragment();
-        }
-        return fragment;
+    public static TopicsFragment newInstance(String url) {
+        return new TopicsFragment(url);
     }
 
     public TopicsFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -95,13 +111,29 @@ public class TopicsFragment extends Fragment implements
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        initView();
+        return rootView;
+    }
+
+    private void initView() {
+
         ButterKnife.inject(this, rootView);
 
+        footer = new LoadingFooter(getActivity());
+        listView.addFooterView(footer.getView());
+        footer.setState(LoadingFooter.State.Idle);
+        footer.setiLoader(new LoadingFooter.ILoader() {
+            @Override
+            public void load() {
+                loadNextPage();
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new GetDataTask().execute();
+                loadFirstPage();
+//                new GetDataTask().execute();
             }
         });
         swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
@@ -115,9 +147,12 @@ public class TopicsFragment extends Fragment implements
             //当ListView不在滚动，并且ListView的最后一项的索引等于adapter的项数减一时则自动加载（因为索引是从0开始的）
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                Log.i("index", "lastItemIndex=" + lastItemIndex + "mAdapter.getCount=" + mAdapter.getCount());
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
-                        && lastItemIndex == mAdapter.getCount() - 1) {
-                    loadNextPage();
+                        && lastItemIndex == mAdapter.getCount()) {
+                    if (footer.getState() != LoadingFooter.State.Loading) {
+                        footer.setState(LoadingFooter.State.Loading);
+                    }
                 }
             }
 
@@ -139,9 +174,6 @@ public class TopicsFragment extends Fragment implements
         getLoaderManager().initLoader(TOPIC_LOADER, null, this);
 
         loadFirstPage();
-
-
-        return rootView;
     }
 
 
@@ -218,8 +250,27 @@ public class TopicsFragment extends Fragment implements
 
     }
 
+    @Override
+    public void onStop() {
+        stopVolleyRequest();
+        super.onStop();
+    }
+
+    private void stopVolleyRequest() {
+        NetWorkUtil.getInstance(getActivity()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                if (REQUEST_TAG.equals(request.getTag())) {
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
     public void loadFirstPage() {
         loadTopics(1);
+        page = 1;
     }
 
     public void loadNextPage() {
@@ -232,12 +283,9 @@ public class TopicsFragment extends Fragment implements
         Map<String, String> param = new HashMap<String, String>();
         param.put("page", page + "");
         param.put("per_page", PER_PAGE);
+        String requestUrl = NetWorkUtil.appendParam(url, param);
 
-        String url = NetWorkUtil.getInstance(getActivity()).appendParam(NetWorkUtil.TOPICS, param);
-
-        StringRequest request = new StringCharsetRequest(url, new Response.Listener<String>() {
-
-
+        StringCharsetRequest request = new StringCharsetRequest(requestUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
@@ -249,6 +297,7 @@ public class TopicsFragment extends Fragment implements
                     new Delete().from(Topic.class).execute();//清空topic表
                 }
                 insertList(topics);
+                footer.setState(LoadingFooter.State.Idle);
                 Log.i("topicInsert", new Select().from(Topic.class).execute().size() + "");
             }
         },
@@ -260,7 +309,9 @@ public class TopicsFragment extends Fragment implements
                 }
                 , NetWorkUtil.CHARSET
         );
+//        request.setParam(param);
 
+        request.setTag(REQUEST_TAG);
         NetWorkUtil.getInstance(getActivity()).getRequestQueue().add(request);
     }
 

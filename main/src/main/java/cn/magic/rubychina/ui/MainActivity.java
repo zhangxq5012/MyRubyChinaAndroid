@@ -2,6 +2,8 @@ package cn.magic.rubychina.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.nfc.Tag;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -14,16 +16,19 @@ import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.Toast;
 
+import java.util.Stack;
+
 import cn.magic.rubychina.main.R;
 import cn.magic.rubychina.ui.itf.IBackPressed;
 import cn.magic.rubychina.ui.itf.OnFragmentInteractionListener;
 import cn.magic.rubychina.ui.topicinfo.TopicInfoFragment;
+import cn.magic.rubychina.util.NetWorkUtil;
 import cn.magic.rubychina.util.UserUtils;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicsFragment.OnTopicSelectedListener
-        , TopicInfoFragment.OnFragmentInteractionListener,OnFragmentInteractionListener {
+        , TopicInfoFragment.OnFragmentInteractionListener, OnFragmentInteractionListener {
 
     public static final int LOGINREQUEST = 256;
     public static final int SENDTOPICREQUEST = 256;
@@ -35,7 +40,7 @@ public class MainActivity extends ActionBarActivity
 
     IBackPressed currentFrag;
 
-    Fragment currentFragment;
+    Stack<Fragment> stack=new Stack<Fragment>();
 
 
     /**
@@ -50,6 +55,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Debug.startMethodTracing();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -68,16 +74,22 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+    protected void onStop() {
+        Debug.stopMethodTracing();
+        super.onStop();
+    }
+
+    @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (position == 0) {
-            fragment = TopicsFragment.newInstance();
+            fragment = TopicsFragment.newInstance(NetWorkUtil.TOPICS);
         } else if (position == 1) {
-            fragment=NodePagerFragment.newInstance();
+            fragment = NodePagerFragment.newInstance();
         }
-        replaceFragment(fragment);
+        replaceFragment(fragment, TOPIC_TAG);
     }
 
     public void onSectionAttached(int number) {
@@ -142,18 +154,28 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    private static final String TOPIC_TAG = "topicTag";
+    private static final String INFO_TAG = "topicInfo";
+
     public void onTopicSelect(String topicID) {
         TopicInfoFragment topicInfoFragment = TopicInfoFragment.newInstance(topicID);
-        replaceFragment(topicInfoFragment);
+        replaceFragment(topicInfoFragment, TOPIC_TAG);
         Log.e(TAG, "testTopicSelected" + topicID);
         currentFrag = topicInfoFragment;
     }
 
-    private void replaceFragment(Fragment topicInfoFragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container,
-                topicInfoFragment).addToBackStack(null).commit();
+    private void replaceFragment(final Fragment fragment, String tag) {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(stack.size()>0){
+            transaction.hide(stack.peek());
+        }
+
+        if(!stack.contains(fragment)){
+            transaction.add(R.id.container,fragment);
+            stack.add(fragment);
+        }
+        transaction.addToBackStack(null).commit();
 
     }
 
@@ -164,8 +186,12 @@ public class MainActivity extends ActionBarActivity
             if (currentFrag.onBackPressed()) {
                 return;
             }
-            ;
         }
+        if (stack.size()==1){
+            onStop();
+        }
+        stack.pop();
+        getSupportFragmentManager().beginTransaction().show(stack.peek()).commit();
         super.onBackPressed();
     }
 
@@ -198,6 +224,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onFragmentInteraction(Bundle bundle) {
+        String source = bundle.getString(OnFragmentInteractionListener.SOURCE);
+        if (source == NodeFragment.class.getName()) {//节点分类调用
+            String nodeID = bundle.getString(OnFragmentInteractionListener.ARGS);
+            String nodeUrl = String.format(NetWorkUtil.NODE_URL, nodeID);
+            replaceFragment(TopicsFragment.newInstance(nodeUrl), INFO_TAG);
+
+        }
 
     }
 }

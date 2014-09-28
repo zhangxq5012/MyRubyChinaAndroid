@@ -112,7 +112,7 @@ public class AbstractObjectAdapter extends BaseAdapter {
     }
 
     private void setViewText(TextView v, String text) {
-        Spanned parsedHtml= Html.fromHtml(text,new HtmlImageGetter(mContext,v,text),null);
+        Spanned parsedHtml = Html.fromHtml(text, new HtmlImageGetter(mContext, v, text), null);
         v.setText(parsedHtml);
 
     }

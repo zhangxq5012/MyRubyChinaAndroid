@@ -41,18 +41,17 @@ public class HtmlImageGetter implements Html.ImageGetter {
     }
 
 
-
     @Override
     public Drawable getDrawable(String source) {
 //        Drawable drawable=context.getResources().getDrawable(R.drawable.avatar_middle);
 //        drawable.setBounds(new Rect(0,0,400,200));
 //        return drawable;
-        Bitmap bitmap=LruBitmapCache.getInstance().getBitmap(source);
-        if(bitmap==null){
-            ImageGetterTast task=new ImageGetterTast();
+        Bitmap bitmap = LruBitmapCache.getInstance().getBitmap(source);
+        if (bitmap == null) {
+            ImageGetterTast task = new ImageGetterTast();
             task.execute(source);
-        }else{
-            Drawable drawable=new BitmapDrawable(bitmap);
+        } else {
+            Drawable drawable = new BitmapDrawable(bitmap);
             drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth() * 2, 0
                     + drawable.getIntrinsicHeight() * 2);
 //            drawable.setBounds(new Rect(0,0,400,200));
@@ -63,30 +62,30 @@ public class HtmlImageGetter implements Html.ImageGetter {
     }
 
 
-
-    public class ImageGetterTast extends AsyncTask<String,Void,Drawable>{
+    public class ImageGetterTast extends AsyncTask<String, Void, Drawable> {
 
         @Override
         protected Drawable doInBackground(String... params) {
-            String url=params[0];
-            Drawable drawable= fetchDrawable(url);
+            String url = params[0];
+            Drawable drawable = fetchDrawable(url);
             drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth() * 2, 0
                     + drawable.getIntrinsicHeight() * 2);
             BitmapDrawable bd = (BitmapDrawable) drawable;
-            Bitmap bitmap= bd.getBitmap();
-            LruBitmapCache.getInstance().addBitmapToCache(url,bitmap);
-            return  drawable;
+            Bitmap bitmap = bd.getBitmap();
+            LruBitmapCache.getInstance().addBitmapToCache(url, bitmap);
+            return drawable;
         }
 
         @Override
         protected void onPostExecute(Drawable drawable) {
             super.onPostExecute(drawable);
-            textView.setText(Html.fromHtml(text,HtmlImageGetter.this,null));
+            textView.setText(Html.fromHtml(text, HtmlImageGetter.this, null));
         }
     }
 
-    /***
+    /**
      * Get the Drawable from URL
+     *
      * @param urlString
      * @return
      */

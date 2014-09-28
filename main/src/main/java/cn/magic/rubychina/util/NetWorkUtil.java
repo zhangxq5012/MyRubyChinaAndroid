@@ -46,6 +46,8 @@ public class NetWorkUtil {
 
     public static final String NODE=API+"/"+"nodes.json";
 
+    public static final String NODE_URL = API2 + "/"+"topics/node/%s.json";
+
     RequestQueue requestQueue;
 
     private static Context context;
@@ -98,7 +100,8 @@ public class NetWorkUtil {
                 strb.append(key+"="+param.get(key));
                 strb.append("&");
             }
-            url=url+strb.substring(0,strb.length()-1) ;
+            String returnUrl=url+strb.substring(0,strb.length()-1) ;
+            return returnUrl;
         }
         return url;
     }

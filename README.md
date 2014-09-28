@@ -7,3 +7,5 @@
 * [**Android-PullToRefresh**](https://github.com/chrisbanes/Android-PullToRefresh) ： 下拉刷新和到底部自动加载，以后可能换成SwipeRefreshLayout  
 * [**butterknife**](https://github.com/JakeWharton/butterknife): view注入框架，简化开发，减少代码。
 * [**ListViewAnimations**](https://github.com/nhaarman/ListViewAnimations):ListView添加动画
+* [**AndroidStaggeredGrid**](https://github.com/etsy/AndroidStaggeredGrid):支持不同高度的gridview
+* [**ActiveAndroid**](https://github.com/pardom/ActiveAndroid):ORM框架

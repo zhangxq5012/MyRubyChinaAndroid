@@ -10,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +51,7 @@ import cn.magic.rubychina.adapter.ExpandCursorAdapter;
 import cn.magic.rubychina.main.R;
 import cn.magic.rubychina.ui.LoginActivity;
 import cn.magic.rubychina.ui.itf.IBackPressed;
+import cn.magic.rubychina.util.HtmlImageGetter;
 import cn.magic.rubychina.util.NetWorkUtil;
 import cn.magic.rubychina.util.StringCharsetRequest;
 import cn.magic.rubychina.util.UserUtils;
@@ -65,7 +66,7 @@ import cn.magic.rubychina.vo.TopicReply;
  * Use the {@link TopicInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderManager.LoaderCallbacks<Cursor> {
+public class TopicInfoFragment extends Fragment implements IBackPressed, LoaderManager.LoaderCallbacks<Cursor> {
     public static final String MENUREPLYLIST = "回复列表";
 
     private static final String TOPICID = "TOPICID";
@@ -73,20 +74,36 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
     private String topicID;
     boolean repliesState = false;
 
+    private static TopicInfoFragment fragment;
+
+
     //界面组件
-    @InjectView(R.id.avatarView) NetworkImageView imageView;
-    @InjectView(R.id.m_login)TextView loginText;
-    @InjectView(R.id.replies_count) TextView repliesCount;
-    @InjectView(R.id.title)TextView title;
-    @InjectView(R.id.node_name)TextView nodeName;
-    @InjectView(R.id.last_reply_user_login)TextView lastReplyUserLogin;
-    @InjectView(R.id.replied_at)TextView repliedAt;
-    @InjectView(R.id.topic_body)WebView webbody;
-    @InjectView(R.id.topic_header)View magictet;
-    @InjectView(R.id.replies_list) ListView repliesList;
-    @InjectView(R.id.reply_infos)RelativeLayout relativeLayout;
-    @InjectView(R.id.my_reply)EditText replyEdit;
-    @InjectView(R.id.send_reply) Button boSendReply;
+    @InjectView(R.id.avatarView)
+    NetworkImageView imageView;
+    @InjectView(R.id.m_login)
+    TextView loginText;
+    @InjectView(R.id.replies_count)
+    TextView repliesCount;
+    @InjectView(R.id.title)
+    TextView title;
+    @InjectView(R.id.node_name)
+    TextView nodeName;
+    @InjectView(R.id.last_reply_user_login)
+    TextView lastReplyUserLogin;
+    @InjectView(R.id.replied_at)
+    TextView repliedAt;
+    @InjectView(R.id.topic_body)
+    TextView webbody;
+    @InjectView(R.id.topic_header)
+    View magictet;
+    @InjectView(R.id.replies_list)
+    ListView repliesList;
+    @InjectView(R.id.reply_infos)
+    RelativeLayout relativeLayout;
+    @InjectView(R.id.my_reply)
+    EditText replyEdit;
+    @InjectView(R.id.send_reply)
+    Button boSendReply;
 
     @InjectView(R.id.topicProgress)
     ProgressBar topicProgress;
@@ -100,9 +117,25 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
     private OnFragmentInteractionListener mListener;
 
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @return A new instance of fragment TopicInfoFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static TopicInfoFragment newInstance(String param1) {
+        fragment = new TopicInfoFragment();
+        Bundle args = new Bundle();
+        args.putString(TOPICID, param1);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
 
-    private void updateVies() {
+    private void updateViews() {
         imageView.setImageUrl(topicInfo.getUser().getAvatar_url(), NetWorkUtil.getInstance(getActivity()).getImageLoader());
         loginText.setText(topicInfo.getLogin());
         repliesCount.setText(topicInfo.getReplies_count());
@@ -111,8 +144,9 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
         lastReplyUserLogin.setText(topicInfo.getLast_reply_user_login());
         repliedAt.setText(topicInfo.getReplied_at());
         String html = topicInfo.getBody_html();
-        webbody.loadData(html, "text/html; charset=UTF-8", null);
-        replies=topicInfo.getReplies();
+        webbody.setText(Html.fromHtml(html, new HtmlImageGetter(getActivity(), webbody, html), null));
+//        webbody.loadData(html, "text/html; charset=UTF-8", null);
+        replies = topicInfo.getReplies();
 
         new Delete().from(TopicReply.class).execute();
         addUserInfo(replies);
@@ -125,8 +159,8 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
     }
 
     private void addUserInfo(List<TopicReply> replies) {
-        if(replies!=null&&replies.size()>0){
-            for(TopicReply reply:replies){
+        if (replies != null && replies.size() > 0) {
+            for (TopicReply reply : replies) {
                 reply.addUserInfo();
             }
         }
@@ -137,21 +171,6 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment TopicInfoFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TopicInfoFragment newInstance(String param1) {
-        TopicInfoFragment fragment = new TopicInfoFragment();
-        Bundle args = new Bundle();
-        args.putString(TOPICID, param1);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,14 +181,6 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
         getLoaderManager().initLoader(2, null, this);
         setHasOptionsMenu(true);
     }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getTopicInfo();
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -182,12 +193,20 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
 //        return inflater.inflate(R.layout.fragment_topic_info, container, false);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getTopicInfo();
+    }
+
+
     private void initViewConfig() {
-        webbody.setHorizontalScrollbarOverlay(false);
-        webbody.getSettings().setDefaultTextEncodingName(NetWorkUtil.CHARSET);
-        webbody.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//        webbody.setHorizontalScrollbarOverlay(false);
+//        webbody.getSettings().setDefaultTextEncodingName(NetWorkUtil.CHARSET);
+//        webbody.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 
         boSendReply.setOnClickListener(new SendReplyListener());
+        webbody.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         repliesAdapter = new ExpandCursorAdapter(getActivity(), R.layout.reply_info_item, null, FROM, TO);
         repliesList.setAdapter(repliesAdapter);
@@ -226,7 +245,7 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
             public void onResponse(String response) {
                 Gson gson = new Gson();
                 topicInfo = gson.fromJson(response, Topic.class);
-                updateVies();
+                updateViews();
                 Log.e("test", "test2");
             }
         }, new Response.ErrorListener() {
@@ -324,11 +343,28 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
 
     private void changeToReplyState(boolean flag) {
         repliesState = flag;
+        long duration = 500;
+//        Animation inAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up_in);
+//        Animation outAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.push_up_out);
         if (flag) {
+//            webbody.setAnimation(inAnimation);
+//            magictet.setAnimation(inAnimation);
+//            relativeLayout.setAnimation(outAnimation);
+
+
+//            webbody.animate().alpha(0).scaleY(0.01f).setDuration(duration);
+//            magictet.animate().alpha(0).scaleY(0.01f).setDuration(duration);
+//            relativeLayout.animate().alpha(1).setDuration(duration);
             webbody.setVisibility(View.GONE);
             magictet.setVisibility(View.GONE);
             relativeLayout.setVisibility(View.VISIBLE);
         } else {
+//            webbody.setAnimation(outAnimation);
+//            magictet.setAnimation(outAnimation);
+//            relativeLayout.setAnimation(inAnimation);
+//            webbody.animate().alpha(1).scaleY(1).setDuration(duration);
+//            magictet.animate().alpha(1).scaleY(1).setDuration(duration);
+//            relativeLayout.animate().alpha(0).setDuration(duration);
             webbody.setVisibility(View.VISIBLE);
             magictet.setVisibility(View.VISIBLE);
             relativeLayout.setVisibility(View.GONE);
@@ -395,5 +431,6 @@ public class TopicInfoFragment extends Fragment implements IBackPressed,LoaderMa
 
         }
     }
+
 
 }
